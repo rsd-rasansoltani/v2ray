@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2rayNG Config Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5528a7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5528a7;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Config Generator</h1>
+
+    <label for="configName"></label>
+    <input type="text" id="configName" placeholder="...">
+
+    <button onclick="generateConfig()">T</button>
+
+    <textarea id="configOutput" readonly placeholder="..."></textarea>
+    <button onclick="copyConfig()">K</button>
+</div>
+
+<script>
+    function generateConfig() {
+        const configName = document.getElementById('configName').value || "defaultConfig";
+        
+        // کانفیگ نمونه که از ورودی‌ها ساخته می‌شود
+        const config = {
+            "dns": {
+                "hosts": {
+                    "geosite:category-ads-all": "127.0.0.1",
+                    "domain:googleapis.cn": "googleapis.com",
+                    "dns.alidns.com": [
+                        "223.5.5.5",
+                        "223.6.6.6",
+                        "2400:3200::1",
+                        "2400:3200:baba::1"
+                    ],
+                    "one.one.one.one": [
+                        "1.1.1.1",
+                        "1.0.0.1",
+                        "2606:4700:4700::1111",
+                        "2606:4700:4700::1001"
+                    ],
+                    "dot.pub": [
+                        "1.12.12.12",
+                        "120.53.53.53"
+                    ],
+                    "dns.google": [
+                        "8.8.8.8",
+                        "8.8.4.4",
+                        "2001:4860:4860::8888",
+                        "2001:4860:4860::8844"
+                    ],
+                    "dns.quad9.net": [
+                        "9.9.9.9",
+                        "149.112.112.112",
+                        "2620:fe::fe",
+                        "2620:fe::9"
+                    ],
+                    "common.dot.dns.yandex.net": [
+                        "77.88.8.8",
+                        "77.88.8.1",
+                        "2a02:6b8::feed:0ff",
+                        "2a02:6b8:0:1::feed:0ff"
+                    ]
+                },
+                "servers": [
+                    "1.1.1.1",
+                    {
+                        "address": "1.1.1.1",
+                        "domains": [
+                            "domain:googleapis.cn",
+                            "domain:gstatic.com"
+                        ]
+                    },
+                    {
+                        "address": "223.5.5.5",
+                        "domains": [
+                            "domain:dns.alidns.com",
+                            "domain:dns.pub",
+                            "domain:doh.pub",
+                            "domain:dot.pub",
+                            "domain:doh.360.cn",
+                            "domain:dot.360.cn",
+                            "geosite:cn",
+                            "geosite:geolocation-cn"
+                        ],
+                        "expectIPs": [
+                            "geoip:cn"
+                        ],
+                        "skipFallback": true
+                    }
+                ]
+            },
+            "inbounds": [
+                {
+                    "listen": "127.0.0.1",
+                    "port": 10808,
+                    "protocol": "socks",
+                    "settings": {
+                        "auth": "noauth",
+                        "udp": true,
+                        "userLevel": 8
+                    },
+                    "sniffing": {
+                        "destOverride": [
+                            "http",
+                            "tls"
+                        ],
+                        "enabled": true,
+                        "routeOnly": false
+                    },
+                    "tag": "socks"
+                }
+            ],
+            "log": {
+                "loglevel": "warning"
+            },
+            "outbounds": [
+                {
+                    "mux": {
+                        "concurrency": -1,
+                        "enabled": false,
+                        "xudpConcurrency": 8,
+                        "xudpProxyUDP443": ""
+                    },
+                    "protocol": "wireguard",
+                    "settings": {
+                        "address": [
+                            "172.16.0.2/32"
+                        ],
+                        "mtu": 1280,
+                        "peers": [
+                            {
+                                "endpoint": "188.114.96.249:7559",
+                                "preSharedKey": "",
+                                "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
+                            }
+                        ],
+                        "reserved": [
+                            125,
+                            145,
+                            54
+                        ],
+                        "secretKey": "wMK8MS5KBhQBSbr/n3++CcKscuwuKOZb1YIoGY0CoFQ="
+                    },
+                    "tag": "proxy"
+                },
+                {
+                    "protocol": "freedom",
+                    "settings": {
+                        "domainStrategy": "UseIP"
+                    },
+                    "tag": "direct"
+                },
+                {
+                    "protocol": "blackhole",
+                    "settings": {
+                        "response": {
+                            "type": "http"
+                        }
+                    },
+                    "tag": "block"
+                }
+            ],
+            "remarks": configName,
+            "routing": {
+                "domainStrategy": "IPIfNonMatch",
+                "rules": [
+                    {
+                        "ip": [
+                            "1.1.1.1"
+                        ],
+                        "outboundTag": "proxy",
+                        "port": "53",
+                        "type": "field"
+                    },
+                    {
+                        "ip": [
+                            "223.5.5.5"
+                        ],
+                        "outboundTag": "direct",
+                        "port": "53",
+                        "type": "field"
+                    },
+                    {
+                        "domain": [
+                            "domain:googleapis.cn",
+                            "domain:gstatic.com"
+                        ],
+                        "outboundTag": "proxy",
+                        "type": "field"
+                    },
+                    {
+                        "network": "udp",
+                        "outboundTag": "block",
+                        "port": "443",
+                        "type": "field"
+                    },
+                    {
+                        "domain": [
+                            "geosite:category-ads-all"
+                        ],
+                        "outboundTag": "block",
+                        "type": "field"
+                    }
+                ]
+            }
+        };
+
+        // تبدیل کانفیگ به رشته JSON
+        const configString = JSON.stringify(config, null, 4);
+        
+        // نمایش کانفیگ در textarea
+        document.getElementById('configOutput').value = configString;
+    }
+
+    // تابع برای کپی کردن کانفیگ
+    function copyConfig() {
+        const configOutput = document.getElementById('configOutput');
+        configOutput.select();
+        configOutput.setSelectionRange(0, 99999); // برای موبایل
+        document.execCommand('copy');
+        alert('کانفیگ کپی شد!');
+    }
+</script>
+
+</body>
+</html>
